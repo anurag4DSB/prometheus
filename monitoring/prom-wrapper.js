@@ -37,18 +37,14 @@ module.exports = {
     return references[name];
   },
 
-//  createCounter: function (name, help, labels) {
-//    if (labels === undefined) {
-//      labels = [];
-//    }
-//    references[name] = new client.Counter(namespace + '_' + name, help, labels);
-//    return references[name];
-//  },
-
-  createCounter: function (metrics_name, metrics_help) {
+  createCounter: function (metrics_name, metrics_help, metrics_lables) {
+    if (metrics_lables === undefined) {
+      metrics_lables = [];
+    }
     references[metrics_name] = new client.Counter({
-        name: metric_name,
-        help: metrics_help
+        name: metrics_name,
+        help: metrics_help,
+        labels: metrics_lables
     });
     return references[metrics_name];
   },
@@ -57,27 +53,38 @@ module.exports = {
     if (metrics_lables === undefined) {
       metrics_lables = [];
     }
-    references[name] = new client.Gauge({
+    references[metrics_name] = new client.Gauge({
         name: namespace + '_' + metrics_name, 
         help: metrics_help, 
-        labels: metrics_lables});
+        labels: metrics_lables
+    });
     return references[metrics_name];
   },
 
-  createHistogram: function (name, metrics_help, params, metrics_lables) {
+  createHistogram: function (metrics_name, metrics_help, metrics_params, metrics_lables) {
     if (metrics_lables === undefined) {
       metrics_lables = [];
     }
-    references[name] = new client.Histogram(namespace + '_' + name, metrics_help, metrics_lables, params);
-    return references[name];
+    references[metrics_name] = new client.Histogram({
+        name: namespace + '_' + metrics_name, 
+        help: metrics_help, 
+        params: metrics_params,
+        labels: metrics_lables,
+    });
+    return references[metrics_name];
   },
 
-  createSummary: function (name, metrics_help, params, metrics_lables) {
+  createSummary: function (metrics_name, metrics_help, metrics_params, metrics_lables) {
     if (metrics_lables === undefined) {
       metrics_lables = [];
     }
-    references[name] = new client.Summary(namespace + '_' + name, metrics_help, metrics_lables, params);
-    return references[name];
+    references[metrics_name] = new client.Summary({
+        name: namespace + '_' + metrics_name, 
+        help: metrics_help, 
+        params: metrics_params,
+        labels: metrics_lables,
+    });
+    return references[metrics_name];
   },
   collectDefaultMetrics: client.collectDefaultMetrics
 };

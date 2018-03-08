@@ -3,7 +3,7 @@ var router = require('./router');
 var client = require('./monitoring/prom-wrapper.js');
 // Handle your routes here, put static pages in ./public and they will server
 
-const counterAnurag = new client.createCounter('metric_name', 'this is my counter');
+const counterAnurag = new client.createCounter('POST_requests', 'Number of POST Requests');
 
 router.register('/', function(req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
@@ -15,7 +15,7 @@ router.register('/', function(req, res) {
   res.write('Hello World');
   res.end();
 });
-
+// TODO: Remove console.log from default metrics
 router.register('/metrics', function(req, res) {
   console.log(client.collectDefaultMetrics());
   res.end(client.getMetrics());
