@@ -3,9 +3,15 @@ var router = require('./router');
 var client = require('./monitoring/prom-wrapper.js');
 // Handle your routes here, put static pages in ./public and they will server
 
+const counterAnurag = new client.createCounter('metric_name', 'this is my counter');
+
 router.register('/', function(req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
   console.log(req.url);
+  console.log(req.method);
+  if (req.method === 'POST') {
+    counterAnurag.inc();
+}
   res.write('Hello World');
   res.end();
 });
@@ -13,6 +19,7 @@ router.register('/', function(req, res) {
 router.register('/metrics', function(req, res) {
   console.log(client.collectDefaultMetrics());
   res.end(client.getMetrics());
+  counterAnurag.reset();
 });
 
 // We need a server which relies on our router
